@@ -1,7 +1,7 @@
 // Shared Firebase layer for participant, console, display and selftest pages.
 import { initializeApp } from 'firebase/app';
 import {
-  getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut,
+  getAuth, initializeAuth, inMemoryPersistence, signInAnonymously, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut,
 } from 'firebase/auth';
 import {
   getFirestore, doc, collection, getDoc, getDocs, setDoc, updateDoc, deleteDoc, onSnapshot,
@@ -9,8 +9,11 @@ import {
 } from 'firebase/firestore';
 import { firebaseConfig } from '../shared/firebase-config.js';
 
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// Test aid: "&sim=1" gives this tab its own throw-away anonymous identity (in-memory, lost on reload),
+// so several simulated participants can run in one browser next to the console. Not used at the event.
+export const SIM = new URLSearchParams(location.search).has('sim');
+export const app = SIM ? initializeApp(firebaseConfig, `sim-${Math.random().toString(36).slice(2)}`) : initializeApp(firebaseConfig);
+export const auth = SIM ? initializeAuth(app, { persistence: inMemoryPersistence }) : getAuth(app);
 export const db = getFirestore(app);
 export { doc, collection, getDoc, getDocs, setDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, writeBatch };
 
