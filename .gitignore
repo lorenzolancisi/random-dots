@@ -1,0 +1,6 @@
+node_modules/
+# Riservati: contengono i conteggi esatti degli stimoli (DECISIONI.md D-14)
+local/
+preview/
+*.log
+.DS_Store

@@ -1,0 +1,18 @@
+{
+  "name": "random-dots",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Random Dots - wisdom of crowds vs collective intelligence demo (EconCult, 30/11/2026)",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "build": "node tools/build.js",
+    "previews": "node tools/make-previews.js",
+    "check": "node tools/build.js && node --test tests/*.test.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "firebase": "^13.4.0",
+    "qrcode-generator": "^2.0.4"
+  }
+}
