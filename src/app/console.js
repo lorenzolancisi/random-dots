@@ -2,7 +2,7 @@
 // Manual phase control only (D-03): nothing here advances on a timer.
 import {
   auth, db, refs, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot, serverTimestamp, writeBatch,
-  facilitatorSignIn, facilitatorSignOut, waitForUser, watchSession, participantUrl, el, friendlyError,
+  facilitatorSignIn, facilitatorSignOut, probeFacilitator, waitForUser, watchSession, participantUrl, el, friendlyError,
 } from './fb.js';
 import {
   STATES, DEFAULT_TIMERS, nextState, previousState, drawSpokespersons, groupCounts, timerRemaining,
@@ -29,9 +29,6 @@ async function run(fn, okMsg) {
   ui.busy = false; render();
 }
 
-async function probeFacilitator() {
-  try { await getDoc(doc(db, 'sessions', '__probe__', 'private', 'secret')); return true; } catch { return false; }
-}
 
 function follow(sid) {
   if (ui.off) ui.off();

@@ -52,6 +52,21 @@ export async function facilitatorSignIn() {
 
 export const facilitatorSignOut = () => signOut(auth);
 
+export async function probeFacilitator() {
+  // Reading a private doc succeeds only for the facilitator. Retries on transient errors
+  // (on first load Firestore may not be connected yet); only permission-denied means "not the facilitator".
+  for (let i = 0; i < 4; i++) {
+    try { await getDoc(doc(db, 'sessions', '__probe__', 'private', 'secret')); return true; }
+    catch (e) {
+      console.warn('facilitator probe', i, e.code, e.message);
+      if (e.code === 'permission-denied') return false;
+      await new Promise((r) => setTimeout(r, 800 * (i + 1)));
+    }
+  }
+  return false;
+}
+
+
 export const participantFromDoc = (d) => {
   const x = d.data();
   return {

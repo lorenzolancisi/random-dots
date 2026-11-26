@@ -1,7 +1,7 @@
 // WP4 — Display for the projector (PC). No controls (D-02): it follows the session state in real time.
 // It needs the facilitator login only to read the exact count and seed (D-14); it shows the count only at reveal.
 import {
-  auth, db, refs, doc, getDoc, onSnapshot, facilitatorSignIn, waitForUser, watchSession, participantUrl, BASE_URL, el, friendlyError,
+  auth, db, refs, doc, getDoc, onSnapshot, facilitatorSignIn, probeFacilitator, waitForUser, watchSession, participantUrl, BASE_URL, el, friendlyError,
 } from './fb.js';
 import { stimulusVisibility, timerRemaining, groupCounts } from '../shared/protocol.js';
 import { generateStimulus, renderSvg } from '../shared/stimulus.js';
@@ -124,8 +124,8 @@ function tick() {
 setInterval(tick, 250);
 
 async function start() {
-  try { await getDoc(doc(db, 'sessions', '__probe__', 'private', 'secret')); ui.isFac = true; }
-  catch { ui.isFac = false; ui.error = `Signed in as ${auth.currentUser?.email}: not the facilitator account.`; render(); return; }
+  ui.isFac = await probeFacilitator();
+  if (!ui.isFac) { ui.error = `Signed in as ${auth.currentUser?.email}: not the facilitator account (or no connection).`; render(); return; }
   ui.error = null;
   const fromUrl = new URLSearchParams(location.search).get('s');
   if (fromUrl) { follow(fromUrl.toUpperCase()); return; }
