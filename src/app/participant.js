@@ -59,10 +59,11 @@ function estimateForm(key, label, onConfirm) {
       el('button', { class: 'primary', disabled: state.busy, onclick: () => onConfirm(v) }, 'Confirm'),
       el('button', { disabled: state.busy, onclick: () => { state.pending = null; render(); } }, 'Edit'));
   }
-  const input = el('input', { type: 'text', inputmode: 'numeric', pattern: '[0-9]*', autocomplete: 'off', placeholder: '1–2000', 'aria-label': label });
+  const input = el('input', { type: 'text', inputmode: 'numeric', autocomplete: 'off', placeholder: '1–2000', 'aria-label': label });
   const err = el('p', { class: 'error' });
   const form = el('form', {
     class: 'card',
+    novalidate: true,
     onsubmit: (ev) => {
       ev.preventDefault();
       const r = parseEstimate(input.value);
@@ -112,7 +113,7 @@ function render() {
     } else if (st === 'group_discussion') {
       const g = state.group;
       if (!me.group_id) out.push(...msg('Group discussion', 'You are not in a group: listen to the room.'));
-      else if (g?.group_estimate != null) out.push(...msg(`Group ${me.group_id}`, null), el('p', { class: 'big ok' }, `Group estimate sent: ${g.group_estimate}`));
+      else if (g?.group_estimate != null) out.push(el('p', { class: 'big ok' }, `Group estimate sent: ${g.group_estimate}`));
       else if (g?.spokesperson_uid === state.uid) {
         out.push(el('h2', { class: 'alert' }, `You are the spokesperson for Group ${me.group_id} — tell your group`),
           el('p', {}, 'Agree on ONE number together, then enter it here.'),
@@ -130,7 +131,12 @@ function render() {
 async function main() {
   render();
   try {
-    state.uid = (await ensureAnonymous()).uid;
+    const u = await ensureAnonymous();
+    if (!u.isAnonymous) {
+      show(...msg('This browser is signed in as the facilitator', 'Open the participant link on another phone or in a private/incognito window.'));
+      return;
+    }
+    state.uid = u.uid;
     state.sid = await resolveSession();
   } catch (e) { state.error = friendlyError(e); render(); return; }
   if (!state.sid) { render(); return; }

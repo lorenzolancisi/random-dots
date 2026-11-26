@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-26 sera — prova completa e correzioni (Opus 5.5)
+- Prova completa a schermo (console + Display + 2 partecipanti simulati) su una sessione di prova poi cancellata: tutte le fasi ok, numeri dei risultati ricontrollati a mano.
+- Corretto: la console rifiutava il facilitatore (id Firestore `__probe__` riservato) → `probe`.
+- Corretto: messaggio di validazione nativo del browser (nella lingua del telefono) nel campo numerico → solo il messaggio inglese dell'app (`novalidate`).
+- Corretto: "Group X" ripetuto sul telefono del portavoce dopo l'invio.
+- Nuovo: la pagina partecipante non fa entrare un browser già collegato come facilitatore (invita a usare un altro telefono o una finestra in incognito).
+- Numero di versione sugli script (cache di 10 minuti di GitHub Pages).
+- Nuovi documenti: `project-docs/TEST_PLAN.md`, `project-docs/FACILITATOR_GUIDE.md` (bozza).
+
 ## 2026-11-26 — WP0 (Opus 5.5)
 - Primo push su GitHub (`lorenzolancisi/random-dots`). Il sito sta in `docs/`, generato con `npm run build`.
 - `src/shared/firebase-config.js`: configurazione del progetto Firebase `ci-presentation-87e9f` (Firestore eur3). Non è un segreto; senza `measurementId`: l'app non carica Google Analytics.
