@@ -20,12 +20,14 @@ for (const f of readdirSync(join(root, 'src/pages'))) {
 writeFileSync(join(out, '.nojekyll'), '');
 
 const entries = readdirSync(join(root, 'src/app'))
-  .filter((f) => f.endsWith('.js'))
+  .filter((f) => f.endsWith('.js') && f !== 'fb.js')
   .map((f) => join(root, 'src/app', f));
 
 await build({
   entryPoints: entries,
   bundle: true,
+  splitting: true,
+  chunkNames: 'chunks/[name]-[hash]',
   format: 'esm',
   target: 'es2020',
   outdir: join(out, 'js'),
