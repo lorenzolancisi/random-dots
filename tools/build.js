@@ -4,7 +4,7 @@
 //                        no CDN needed at the event)
 // Never copies local/ or preview/ (reserved counts, DECISIONI D-14).
 import { build } from 'esbuild';
-import { readdirSync, mkdirSync, copyFileSync, rmSync, writeFileSync } from 'node:fs';
+import { readdirSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
@@ -13,8 +13,12 @@ const out = join(root, 'docs');
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'js'), { recursive: true });
 
+// Cache-busting: GitHub Pages caches files for 10 minutes; a version tag on entry scripts makes every
+// phone load the current build (chunks are content-hashed already).
+const BUILD_ID = Date.now().toString(36);
 for (const f of readdirSync(join(root, 'src/pages'))) {
-  copyFileSync(join(root, 'src/pages', f), join(out, f));
+  const html = readFileSync(join(root, 'src/pages', f), 'utf8').replace(/src="js\/([\w-]+)\.js"/g, `src="js/$1.js?v=${BUILD_ID}"`);
+  writeFileSync(join(out, f), html);
 }
 // GitHub Pages: serve files as-is (no Jekyll processing).
 writeFileSync(join(out, '.nojekyll'), '');
