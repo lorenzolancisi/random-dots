@@ -14,11 +14,12 @@ export const STATES = Object.freeze([
 
 export const GROUPS = Object.freeze(['A', 'B']);
 
-// D-08 default timers in seconds (editable in the console). null = no timer for that state.
+// Default timers in seconds (editable in the console). null = no timer for that state.
+// D-08 was 45-120-45; 30-90-30 set on 27/11 for the pilot (P-01), final choice after the pilot.
 export const DEFAULT_TIMERS = Object.freeze({
-  individual_estimation: 45,
-  group_discussion: 120,
-  individual_revision: 45,
+  individual_estimation: 30,
+  group_discussion: 90,
+  individual_revision: 30,
   results: 60,
   debriefing: 60,
 });

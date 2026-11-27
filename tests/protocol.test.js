@@ -28,10 +28,10 @@ test('one step back for recovery, never from completed and never to created', ()
   assert.ok(canTransition('results', 'individual_revision'));
 });
 
-test('D-08 default timers 45-120-45', () => {
-  assert.equal(DEFAULT_TIMERS.individual_estimation, 45);
-  assert.equal(DEFAULT_TIMERS.group_discussion, 120);
-  assert.equal(DEFAULT_TIMERS.individual_revision, 45);
+test('default timers 30-90-30 (P-01, pilot 27/11)', () => {
+  assert.equal(DEFAULT_TIMERS.individual_estimation, 30);
+  assert.equal(DEFAULT_TIMERS.group_discussion, 90);
+  assert.equal(DEFAULT_TIMERS.individual_revision, 30);
 });
 
 test('stimulus rule: visible in estimation and discussion, hidden in revision, revealed at results', () => {
